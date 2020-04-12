@@ -1,0 +1,18 @@
+{
+	"name": "Grafikk Documentation",
+	"readme": "README.md",
+	"entryPoint": "\"Grafikk\"",
+	"excludePrivate": true,
+	"ignoreCompilerErrors": true,
+	"stripInternal": true,
+	"inputFiles": [
+		"src/"
+	],
+	"excludeExternals": true,
+	"exclude": [
+		"node_modules",
+		"src/tests",
+		"src/types"
+	],
+	"out": "doc"
+}
