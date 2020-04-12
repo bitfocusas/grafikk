@@ -64,11 +64,7 @@ export default class Grafikk {
 		}
 		else {
 			this.outputBuffer = Buffer.alloc(
-				(
-					this.outputSpecification.pixelsW * 3
-				) * (
-					this.outputSpecification.pixelsH * 3
-				)
+				this.outputSpecification.pixelsW * this.outputSpecification.pixelsH * 3
 			)
 		}
 	}
@@ -89,7 +85,7 @@ export default class Grafikk {
 	}
 
 	drawRGBPixel(x: number, y: number, color: GrafikkColorRGB) {
-		let pos = x * y * 3
+		let pos = (x + y * this.outputSpecification.pixelsW) * 3;
 		this.outputBuffer.writeUInt8(color.r, pos + 0)
 		this.outputBuffer.writeUInt8(color.g, pos + 1)
 		this.outputBuffer.writeUInt8(color.b, pos + 2)
@@ -97,7 +93,7 @@ export default class Grafikk {
 
 	drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB) {
 		if (typeof color !== 'boolean' && this.outputSpecification.mono) {
-			this.drawMonoPixel(x, y, color.r * color.g * color.b > 0)
+			this.drawMonoPixel(x, y, color.r || color.g || color.b > 0 ? true : false)
 		}
 		else if (this.outputSpecification.mono) {
 			this.drawMonoPixel(x, y, !!color)
@@ -114,13 +110,13 @@ export default class Grafikk {
 		}
 	}
 
-	drawVerticalLine(y: number, color: boolean | GrafikkColorRGB) {
+	drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB) {
 		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
 			this.drawPixel(x, y, color)
 		}
 	}
 
-	drawHorizontalLine(x: number, color: boolean | GrafikkColorRGB) {
+	drawVerticalLine(x: number, color: boolean | GrafikkColorRGB) {
 		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
 			this.drawPixel(x, y, color)
 		}
@@ -140,11 +136,63 @@ export default class Grafikk {
 			buffer: this.outputBuffer
 		}
 
-		this.drawVerticalLine(30, true)
+		this.drawHorizontalLine(1, true)
 
-		if (this.outputSpecification.id === 'streamdeckNormal') {
-			//console.log("x", outputResult)
-		}
+		this.drawHorizontalLine(3, false)
+
+		this.drawHorizontalLine(5, <GrafikkColorRGB>{
+			r: 255,
+			g: 0,
+			b: 0,
+		})
+
+		this.drawHorizontalLine(7, <GrafikkColorRGB>{
+			r: 0,
+			g: 255,
+			b: 0,
+		})
+
+		this.drawHorizontalLine(9, <GrafikkColorRGB>{
+			r: 0,
+			g: 0,
+			b: 255,
+		})
+
+		this.drawHorizontalLine(11, <GrafikkColorRGB>{
+			r: 255,
+			g: 0,
+			b: 255,
+		})
+
+		this.drawHorizontalLine(13, <GrafikkColorRGB>{
+			r: 255,
+			g: 255,
+			b: 0,
+		})
+
+		this.drawHorizontalLine(15, <GrafikkColorRGB>{
+			r: 0,
+			g: 255,
+			b: 255,
+		})
+
+		this.drawHorizontalLine(17, <GrafikkColorRGB>{
+			r: 255,
+			g: 255,
+			b: 255,
+		})
+
+		this.drawHorizontalLine(19, <GrafikkColorRGB>{
+			r: 0,
+			g: 0,
+			b: 0,
+		})
+
+		this.drawHorizontalLine(21, true)
+
+
+
+
 		this.outputCallback(outputResult)
 
 	}
