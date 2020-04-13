@@ -23,7 +23,7 @@ interface GrafikkOutputSpecification {
 }
 
 import Debug from 'debug';
-
+import GrafikkFont from './GrafikkFont';
 const debug = Debug('Grafikk:main');
 
 debug('hehe');
@@ -129,6 +129,7 @@ export default class Grafikk {
 		}
 	}
 
+
 	generate(inputSpecification: GrafikkInputSpecification) {
 		this.outputBufferClear();
 
@@ -141,6 +142,9 @@ export default class Grafikk {
 			error: null,
 			buffer: this.outputBuffer
 		};
+
+		let font = new GrafikkFont();
+		console.log("font", font);
 
 		this.outputCallback(outputResult);
 	}
