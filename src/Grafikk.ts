@@ -143,9 +143,17 @@ export default class Grafikk {
 			buffer: this.outputBuffer
 		};
 
-		let font = new GrafikkFont();
-		console.log("font", font);
+		let font = new GrafikkFont(__dirname + "/../Ubuntu-C.ttf");
+		font.size(14)
+		let start = Date.now();
+		for (let x = 1; x <= 1000; x++) {
+			font.renderString("Hei du dette er en veldig god nyhet.")
+		}
 
-		this.outputCallback(outputResult);
+		console.log("end", (Date.now() - start) / 1000)
+
+		this.outputCallback(outputResult)
 	}
+
+
 }

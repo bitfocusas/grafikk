@@ -1,106 +1,47 @@
 const fs = require('fs');
+const freetype = require('@julusian/freetype2');
 
-interface Face {
+interface GrafikkFontFace {
 	[key: string]: any
 }
 
 export default class GrafikkFont {
 
-	private face: Face = {};
-	private freetype: any;
+	private face: GrafikkFontFace = {
+		size: 14
+	}
 
-	constructor() {
-		console.log("meh");
+	private memoryface: any
 
-		this.freetype = require('freetype2');
-		console.log("this.freetype", this.freetype);
-
-		let charSize = {
-			charWidth: 0,
-			charHeight: 15 * 64,
-			horzResolution: 128,
-			vertResolution: 128,
-		};
-
-		const pathFont: string = './Ubuntu-C.ttf';
-
-		console.log("meh1");
-		let file = fs.readFileSync(pathFont);
-		console.log("file", file);
-
-		this.freetype.New_Memory_Face(file, 0, this.face);
-		console.log("meh2");
-
-		this.freetype.Set_Pixel_Sizes(this.face, 1, 1);
-		console.log("meh3");
-		this.freetype.Set_Char_Size(this.face,
-			charSize.charWidth,
-			charSize.charHeight,
-			charSize.horzResolution,
-			charSize.vertResolution
-		);
-
-		this.freetype.Set_Transform(
-			this.face, [0, 1 << 16, -1 << 16, 0], 0
-		);
+	constructor(fontPath: string, fontFaceOptions: GrafikkFontFace = {}) {
+		this.face = {
+			...this.face,
+			...fontFaceOptions,
+		}
+		this.memoryface = freetype.NewMemoryFace(fs.readFileSync(fontPath));
+		// Give it some size
 
 	}
 
-	convertStringToCharsInt(input: string) {
-		return input.split('').map(
-			(c: string) => {
-				return c.charCodeAt(0);
-			}
-		);
+	renderString(text: string) {
+		return this.charCodes(text).map(code => this.glyph(code))
 	}
 
-	convertStringToPixelChars(input: any) {
-		const charCodes = this.convertStringToCharsInt(input);
-		const bitmaps = charCodes.map((ch: any) => {
-			this.freetype.Load_Char(this.face, ch, this.freetype.LOAD_DEFAULT);
-			this.freetype.Render_Glyph(this.face.glyph, this.freetype.RENDER_MODE_MONO);
-			console.log("this.face.glyph", this.face.glyph);
-			return this.face.glyph.bitmap;
+	size(pixelSize: number) {
+		this.memoryface.setPixelSizes(0, this.face.size = pixelSize)
+	}
+
+	charCodes(textString: string) {
+		return textString.split('').map(c => c.charCodeAt(0))
+	}
+
+	glyph(charCode: number) {
+		const glyph = this.memoryface.loadChar(charCode, {
+			render: true,
+			loadTarget: freetype.RenderMode.MONO
 		});
-
-		const charBytes = bitmaps.map(this.renderBitmap);
-		return charBytes;
+		return glyph
 	}
-
-	renderBitmap(
-		bitmap: {
-			pitch: number;
-			buffer: Buffer;
-			width: number;
-			rows: number;
-		}
-	) {
-
-		const charBytes: any = [];
-
-		for (var j = 0; j < bitmap.pitch; j++) {
-
-			charBytes[j] = [];
-			let i = j;
-			let k = 0;
-
-			while (i < bitmap.buffer.length) {
-				charBytes[j][k] = bitmap.buffer.readUInt8(i);
-				i = i + bitmap.pitch;
-				k++;
-			}
-
-		}
-
-		return {
-			data: charBytes,
-			height: bitmap.width,
-			width: bitmap.rows,
-		};
-
-	}
-
-
 
 }
 

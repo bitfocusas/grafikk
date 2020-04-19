@@ -43,7 +43,7 @@ tests.map(outputSpecification => {
 		gfx.generate({
 			text: currentRenderText
 		})
-	}, 350)
+	}, 2000)
 
 })
 
