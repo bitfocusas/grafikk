@@ -1,19 +1,21 @@
-interface GrafikkInputSpecification {
-	text: string | null;
+import GrafikkFont from './GrafikkFont'
+
+export interface GrafikkInputSpecification {
+	text: string;
 }
 
-interface GrafikkOutput {
+export interface GrafikkOutput {
 	error: string | null;
 	buffer: null | Buffer;
 }
 
-interface GrafikkColorRGB {
+export interface GrafikkColorRGB {
 	r: number;
 	g: number;
 	b: number;
 }
 
-interface GrafikkOutputSpecification {
+export interface GrafikkOutputSpecification {
 	id: string | undefined;
 	physicalW: number;
 	physicalH: number;
@@ -22,25 +24,24 @@ interface GrafikkOutputSpecification {
 	mono: boolean | undefined;
 }
 
-import Debug from 'debug';
-import GrafikkFont from './GrafikkFont';
-const debug = Debug('Grafikk:main');
-
-debug('hehe');
-
 export default class Grafikk {
-	private inputSpecification: GrafikkInputSpecification = { text: null };
-	private outputBuffer: Buffer;
-	private outputSpecification: GrafikkOutputSpecification = {
+
+	public inputSpecification: GrafikkInputSpecification = {
+		text: 'None'
+	}
+
+	public outputBuffer: Buffer
+
+	public outputSpecification: GrafikkOutputSpecification = {
 		id: undefined,
 		physicalW: 64,
 		physicalH: 64,
 		pixelsW: 10,
 		pixelsH: 10,
 		mono: false
-	};
+	}
 
-	private outputCallback: (outputResult: GrafikkOutput) => void;
+	public outputCallback: (outputResult: GrafikkOutput) => void;
 
 	constructor(
 		outputSpecification: GrafikkOutputSpecification,
@@ -98,11 +99,13 @@ export default class Grafikk {
 	}
 
 	drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB) {
+
+		if (x < 0 || y < 0 || x >= this.outputSpecification.pixelsW || y >= this.outputSpecification.pixelsH) {
+			return
+		}
+
 		if (typeof color !== 'boolean' && this.outputSpecification.mono) {
-			this.drawMonoPixel(
-				x,
-				y,
-				color.r || color.g || color.b > 0 ? true : false
+			this.drawMonoPixel(x, y, color.r || color.g || color.b > 0 ? true : false
 			);
 		} else if (this.outputSpecification.mono) {
 			this.drawMonoPixel(x, y, !!color);
@@ -136,21 +139,17 @@ export default class Grafikk {
 		this.inputSpecification = {
 			...this.inputSpecification,
 			...inputSpecification
-		};
-
-		const outputResult: GrafikkOutput = {
-			error: null,
-			buffer: this.outputBuffer
-		};
-
-		let font = new GrafikkFont(__dirname + "/../Ubuntu-C.ttf");
-		font.size(14)
-		let start = Date.now();
-		for (let x = 1; x <= 1000; x++) {
-			font.renderString("Hei du dette er en veldig god nyhet.")
 		}
 
-		console.log("end", (Date.now() - start) / 1000)
+		this.drawHorizontalLine(Math.round(this.outputSpecification.pixelsH / 100 * 60), { r: 255, g: 255, b: 255 })
+
+		let font = new GrafikkFont(this, __dirname + "/../Arial.ttf")
+		font.centerTextBox(10, 60, 100, 100, this.outputSpecification.pixelsH / 2, this.inputSpecification.text, { r: 255, g: 255, b: 255 })
+
+		let outputResult: GrafikkOutput = {
+			error: null,
+			buffer: this.outputBuffer
+		}
 
 		this.outputCallback(outputResult)
 	}

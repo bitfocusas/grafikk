@@ -4,17 +4,16 @@ import * as Debug from 'debug';
 const debug = Debug('test');
 
 /* socket.io world */
-var fs = require('fs');
-var https = require('https');
+var http = require('http');
 var express = require('express');
 var app = express();
-var options = { key: fs.readFileSync('./server.key'), cert: fs.readFileSync('./server.cert') };
+var options = {};
 app.use(express.static('public'));
 var serverPort = 3000;
-var server = https.createServer(options, app);
+var server = http.createServer(options, app);
 var io = require('socket.io')(server);
 
-let currentRenderText = "no text";
+let currentRenderText = "#X";
 
 server.listen(serverPort, function () { console.log('server up and running at %s port', serverPort); });
 /* end socket.io server */
@@ -43,7 +42,8 @@ tests.map(outputSpecification => {
 		gfx.generate({
 			text: currentRenderText
 		})
-	}, 2000)
+	}, 200)
+
 
 })
 
