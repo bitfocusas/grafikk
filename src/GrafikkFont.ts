@@ -63,11 +63,6 @@ export default class GrafikkFont {
 		this.grafikk = grafikk
 		this.setFace(fontPath)
 
-		/*		this.memoryface.setTransform(
-					[0, -1 << 16, 1 << 16, 0],
-					undefined
-				)*/
-
 		this.setSize(this.face.size)
 
 	}
