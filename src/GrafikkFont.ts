@@ -129,8 +129,8 @@ export default class GrafikkFont {
 		let posX = fromX
 		glyphs.forEach(glyph => {
 			if (glyph.bitmap !== null) {
-				this.glyphDraw(glyph, posX - glyph.bitmapLeft, fromY - glyph.bitmapTop, color)
-				posX += glyph.bitmap.width
+				this.glyphDraw(glyph, posX + glyph.bitmapLeft, fromY - glyph.bitmapTop, color)
+				posX += glyph.bitmap.width + glyph.bitmapLeft
 			}
 		})
 
