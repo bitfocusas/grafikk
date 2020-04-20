@@ -13,7 +13,7 @@ var serverPort = 3000;
 var server = http.createServer(options, app);
 var io = require('socket.io')(server);
 
-let currentRenderText = "#X";
+let currentRenderText = "Abc";
 
 server.listen(serverPort, function () { console.log('server up and running at %s port', serverPort); });
 /* end socket.io server */
