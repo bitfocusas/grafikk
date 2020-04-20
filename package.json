@@ -5,7 +5,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "npm run build:main && npm run testscript",
+		"start": "nodemon --exec node -r ts-node/register test.ts",
 		"tsc": "tsc",
 		"testscript": "node -r ts-node/register test.ts",
 		"build:doc": "typedoc",
@@ -28,6 +28,7 @@
 		"eslint": "^6.5.1",
 		"mocha": "^7.0.0",
 		"mock-fs": "^4.10.4",
+		"nodemon": "^2.0.3",
 		"nyc": "^15.0.0",
 		"prettier": "^1.19.1",
 		"ts-node": "^8.6.2",
