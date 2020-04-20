@@ -1,5 +1,5 @@
 process.env.DEBUG_DEPTH = '10';
-import Grafikk from './dist/Grafikk';
+import Grafikk from './src/Grafikk'; //'./dist/Grafikk';
 import * as Debug from 'debug';
 const debug = Debug('test');
 

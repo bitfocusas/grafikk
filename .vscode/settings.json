@@ -2,5 +2,5 @@
 	"cSpell.words": ["consts", "mdns", "portconfig", "portfinder", "readpackage"],
 	"prettier.useTabs": true,
 	"prettier.singleQuote": true,
-	"editor.formatOnSave": true
+	"editor.formatOnSave": false
 }

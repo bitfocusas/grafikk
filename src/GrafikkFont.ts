@@ -69,6 +69,7 @@ export default class GrafikkFont {
 				)*/
 
 		this.setSize(this.face.size)
+
 	}
 
 	setFace(fontPath: string) {
@@ -86,11 +87,12 @@ export default class GrafikkFont {
 
 	glyphsWidth(glyphs: Array<GrafikkFontGlyph>): number {
 		let width = glyphs.reduce((val, obj) => val + obj.bitmap.width, 0)
-		return <number><unknown>width
+		return <number>width
 	}
 
 	setSize(pixelSize: number) {
-		this.memoryface.setPixelSizes(0, this.face.size = pixelSize)
+		this.face.size = pixelSize
+		this.memoryface.setPixelSizes(0, pixelSize)
 	}
 
 	getBit(buffer: Buffer, position: number): boolean {
@@ -106,15 +108,23 @@ export default class GrafikkFont {
 	}
 
 	glyphDraw(glyph: any, _fromX: number, _fromY: number, color: GrafikkColorRGB) {
-		let y = 0
-		for (var i = 0; i < glyph.bitmap.buffer.length; i++) {
-			let factor = i % glyph.bitmap.pitch;
-			if (factor === 0) { y++ }
-			glyph.bitmap.buffer.readUInt8(i).toString(2).substr(-8, 8).split("").forEach((val: any, x: any) => {
-				if (val > 0) {
-					this.grafikk.drawPixel(_fromX + (x - (factor * 8)), _fromY + y, color)
+		let i = 0;
+		console.log('Glyph: ' + glyph.bitmap.width + 'x' + glyph.bitmap.height + ' = ' + glyph.bitmap.pitch)
+		for (let y = 0; y < glyph.bitmap.height; ++y) {
+			for (let x = 0; x < glyph.bitmap.width; ++x) {
+				let bitsLeft = Math.floor(x / 8) < glyph.bitmap.pitch - 1 ? 8 : 8 - (glyph.bitmap.width % 8);
+				console.log(`X: ${x} Bitsleft: ${bitsLeft}`)
+				let shouldDraw: boolean = (glyph.bitmap.buffer[i + Math.floor(x/8)] & (1 << (bitsLeft-(x % 8)))) > 0
+
+				if (shouldDraw) {
+					this.grafikk.drawPixel(
+						_fromX + x,
+						_fromY + y,
+						color
+					)
 				}
-			})
+			}
+			i += glyph.bitmap.pitch
 		}
 	}
 
@@ -150,7 +160,7 @@ export default class GrafikkFont {
 	glyph(charCode: number): GrafikkFontGlyph {
 		const glyph = this.memoryface.loadChar(charCode, {
 			render: true,
-			loadTarget: freetype.RenderMode.MONO
+			loadTarget: freetype.RenderMode.GRAY
 		});
 		return glyph
 	}

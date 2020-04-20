@@ -57,7 +57,7 @@ $(function() {
 					buffer[bit * 4 + 0] = val ? 255 : 0;
 					buffer[bit * 4 + 1] = val ? 255 : 0;
 					buffer[bit * 4 + 2] = val ? 255 : 0;
-					buffer[bit * 4 + 3] = val ? 255 : 0;
+					buffer[bit * 4 + 3] = 255;
 				}
 			}
 
