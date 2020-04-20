@@ -95,26 +95,11 @@ export default class GrafikkFont {
 		this.memoryface.setPixelSizes(0, pixelSize)
 	}
 
-	getBit(buffer: Buffer, position: number): boolean {
-		const posByte = Math.floor(position / 8)
-		const posBit = position - (posByte * 8)
-		const byte = buffer.readUInt8(posByte)
-		return (byte & (1 << posBit - 1)) !== 0
-	}
-
-	getByte(buffer: Buffer, position: number): boolean {
-		const byte = buffer.readUInt8(position)
-		return byte > 0
-	}
-
 	glyphDraw(glyph: any, _fromX: number, _fromY: number, color: GrafikkColorRGB) {
 		let i = 0;
-		console.log('Glyph: ' + glyph.bitmap.width + 'x' + glyph.bitmap.height + ' = ' + glyph.bitmap.pitch)
 		for (let y = 0; y < glyph.bitmap.height; ++y) {
 			for (let x = 0; x < glyph.bitmap.width; ++x) {
-				let bitsLeft = Math.floor(x / 8) < glyph.bitmap.pitch - 1 ? 8 : 8 - (glyph.bitmap.width % 8);
-				console.log(`X: ${x} Bitsleft: ${bitsLeft}`)
-				let shouldDraw: boolean = (glyph.bitmap.buffer[i + Math.floor(x/8)] & (1 << (bitsLeft-(x % 8)))) > 0
+				let shouldDraw: boolean = (glyph.bitmap.buffer[i++] > 127)
 
 				if (shouldDraw) {
 					this.grafikk.drawPixel(
@@ -124,7 +109,6 @@ export default class GrafikkFont {
 					)
 				}
 			}
-			i += glyph.bitmap.pitch
 		}
 	}
 
@@ -150,8 +134,12 @@ export default class GrafikkFont {
 		let posX = fromX
 		glyphs.forEach(glyph => {
 			if (glyph.bitmap !== null) {
+				// https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html
+				posX += Math.floor(((glyph.metrics.horiAdvance / 64) - glyph.bitmap.width) / 2)
+
 				this.glyphDraw(glyph, posX - glyph.bitmapLeft, fromY - glyph.bitmapTop, color)
-				posX += glyph.bitmap.width
+
+				posX += glyph.bitmap.width + Math.ceil(((glyph.metrics.horiAdvance / 64) - glyph.bitmap.width) / 2)
 			}
 		})
 
@@ -160,7 +148,7 @@ export default class GrafikkFont {
 	glyph(charCode: number): GrafikkFontGlyph {
 		const glyph = this.memoryface.loadChar(charCode, {
 			render: true,
-			loadTarget: freetype.RenderMode.GRAY
+			loadTarget: freetype.RenderMode.NORMAL
 		});
 		return glyph
 	}
