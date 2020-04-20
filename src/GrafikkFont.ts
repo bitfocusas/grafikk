@@ -134,12 +134,8 @@ export default class GrafikkFont {
 		let posX = fromX
 		glyphs.forEach(glyph => {
 			if (glyph.bitmap !== null) {
-				// https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html
-				posX += Math.floor(((glyph.metrics.horiAdvance / 64) - glyph.bitmap.width) / 2)
-
 				this.glyphDraw(glyph, posX - glyph.bitmapLeft, fromY - glyph.bitmapTop, color)
-
-				posX += glyph.bitmap.width + Math.ceil(((glyph.metrics.horiAdvance / 64) - glyph.bitmap.width) / 2)
+				posX += glyph.bitmap.width
 			}
 		})
 
