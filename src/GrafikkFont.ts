@@ -1,4 +1,3 @@
-const fs = require("fs")
 const freetype = require('@julusian/freetype2')
 
 import Grafikk, { GrafikkColorRGB } from './Grafikk'
@@ -88,7 +87,7 @@ export default class GrafikkFont {
 		fontPath: string
 	) {
 		this.fontPath = fontPath
-		this.memoryface = freetype.NewMemoryFace(fs.readFileSync(this.fontPath));
+		this.memoryface = freetype.NewFace(this.fontPath)
 	}
 
 	charCodes(
@@ -126,7 +125,7 @@ export default class GrafikkFont {
 		pixelSize: number
 	) {
 		this.face.size = pixelSize
-		this.face.safety = this.face.size / 2.2
+		this.face.safety = this.face.size / 2.8
 		this.memoryface.setPixelSizes(0, pixelSize)
 	}
 
@@ -271,7 +270,7 @@ export default class GrafikkFont {
 		if (!this.grafikk.outputSpecification.mono) {
 			for (let y = fromY; y <= toY; y++) {
 				for (let x = fromX; x <= toX; x++) {
-					this.grafikk.drawPixel(x,y,background)
+					this.grafikk.drawPixel(x, y, background)
 				}
 			}
 		}
