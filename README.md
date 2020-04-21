@@ -1,4 +1,4 @@
-# Grafikk - Bitfocus Panel Graphics Library)
+# Grafikk - Bitfocus Panel Graphics Library
 
 ## Install
 ```
