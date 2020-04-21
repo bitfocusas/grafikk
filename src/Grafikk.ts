@@ -123,31 +123,44 @@ export default class Grafikk {
 				y, 
 				color.r || color.g || color.b > 0 ? true : false
 			);
-		} else if (this.outputSpecification.mono) {
+		} 
+
+		else if (this.outputSpecification.mono) {
 			this.drawMonoPixel(x, y, !!color);
-		} else if (typeof color === 'boolean') {
+		} 
+
+		else if (typeof color === 'boolean') {
 			this.drawRGBPixel(x, y, <GrafikkColorRGB>{
 				r: color ? 255 : 0,
 				g: color ? 255 : 0,
 				b: color ? 255 : 0
 			});
-		} else {
+		} 
+		
+		else {
 			this.drawRGBPixel(x, y, <GrafikkColorRGB>color);
 		}
 	}
 
-	drawHorizontalLine(x: number, color: boolean | GrafikkColorRGB) {
-		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
-			this.drawPixel(x, y, color);
-		}
-	}
-
-	drawVerticalLine(y: number, color: boolean | GrafikkColorRGB) {
+	drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB) {
 		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
 			this.drawPixel(x, y, color);
 		}
 	}
 
+	drawVerticalLine(x: number, color: boolean | GrafikkColorRGB) {
+		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
+			this.drawPixel(x, y, color);
+		}
+	}
+
+	drawHorizontalLinePercent(yPercent: number, color: boolean | GrafikkColorRGB) {
+		this.drawHorizontalLine(Math.round(this.outputSpecification.pixelsH / 100 * yPercent), color)
+	}
+
+	drawVerticalLinePercent(xPercent: number, color: boolean | GrafikkColorRGB) {
+		this.drawVerticalLine(Math.round(this.outputSpecification.pixelsW / 100 * xPercent), color)
+	}
 
 	generate(inputSpecification: GrafikkInputSpecification) {
 		this.outputBufferClear();
@@ -157,17 +170,30 @@ export default class Grafikk {
 			...inputSpecification
 		}
 
-		this.drawHorizontalLine(this.outputSpecification.pixelsH / 3, { r: 255, g: 255, b: 255 })
+		// Draw context section
+		let fontContext = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
+		fontContext.centerTextBox(
+			0, 0, 100, 35, 
+			this.outputSpecification.pixelsH/100*35, 
+			this.inputSpecification.contextValue, 
+			this.inputSpecification.contextColorText,
+			this.inputSpecification.contextColorBackground,
+		)
 
-		let font = new GrafikkFont(this, __dirname + "/../Arial.ttf")
+		// Draw main section
+		let fontMain = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
 
-		font.centerTextBox(
-			2, 2, 70, 50, 
-			this.outputSpecification.pixelsH / 3, 
+		fontMain.centerTextBox(
+			0, 35, 100, 100, 
+			this.outputSpecification.pixelsH/100*(100-35), 
 			this.inputSpecification.mainValue, 
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
 		)
+
+		// Line between context and main section
+		this.drawHorizontalLinePercent(35, { r: 255, g: 255, b: 255 })
+
 
 		let outputResult: GrafikkOutput = {
 			error: null,

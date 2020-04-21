@@ -59,16 +59,16 @@ function update() {
 	tests.forEach(outputSpecification => {
 		if (outputSpecification.gfx) {
 			debug(`Going to generate ${outputSpecification.pixelsW}x${outputSpecification.pixelsH}`)
-			
+			let now = Date.now();
 			outputSpecification.gfx.generate({
 				mainValue: currentRenderText,
 				contextValue: currentRenderText,
-				mainColorBackground: randColor(),
+				mainColorBackground: { r: 0, g: 0,  b: 0 },
 				mainColorText: randColor(),
-				contextColorBackground: randColor(),
-				contextColorText: randColor(),
+				contextColorBackground: { r: 40,   g: 30,  b: 20 },
+				contextColorText: { r: 255, g: 128,  b: 0 },
 			})
-
+			console.log("time spent", (Date.now() - now),"ms");
 			debug('done')
 		}
 	})

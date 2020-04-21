@@ -30,8 +30,6 @@ $(function() {
 					id: 'render_' + id
 				})
 				.css({
-					width: specification.physicalW * 6 + 'px',
-					height: specification.physicalH * 6 + 'px',
 					backgroundColor: 'black'
 				})
 				.appendTo($rw);
