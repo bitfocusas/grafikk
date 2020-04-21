@@ -174,6 +174,7 @@ export default class Grafikk {
 		let fontContext = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
 		let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12
 		let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight
+		let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1)
 
 		fontContext.centerTextBox(
 			0, 0, 100, topBarPercent, 
@@ -190,7 +191,7 @@ export default class Grafikk {
 		let fontMain = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
 
 		fontMain.centerTextBox(
-			0, topBarPercent, 100, 100, 
+			0, topBarPercentPlus, 100, 100, 
 			this.outputSpecification.pixelsH/100*(100-35), 
 			this.inputSpecification.mainValue, 
 			this.inputSpecification.mainColorText,
