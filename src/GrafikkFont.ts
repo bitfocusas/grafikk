@@ -94,6 +94,24 @@ export default class GrafikkFont {
 		let i = 0;
 		for (let y = 0; y < glyph.bitmap.height; ++y) {
 			for (let x = 0; x < glyph.bitmap.width; ++x) {
+				let shouldDraw: boolean = (glyph.bitmap.buffer[i + Math.floor(x/8)] & (1 << (7-(x % 8)))) > 0
+
+				if (shouldDraw) {
+					this.grafikk.drawPixel(
+						_fromX + x,
+						_fromY + y,
+						color
+					)
+				}
+			}
+			i += glyph.bitmap.pitch
+		}
+	}
+
+	glyphDrawFromNormal(glyph: any, _fromX: number, _fromY: number, color: GrafikkColorRGB) {
+		let i = 0;
+		for (let y = 0; y < glyph.bitmap.height; ++y) {
+			for (let x = 0; x < glyph.bitmap.width; ++x) {
 				let shouldDraw: boolean = (glyph.bitmap.buffer[i++] > 127)
 
 				if (shouldDraw) {
@@ -139,7 +157,7 @@ export default class GrafikkFont {
 	glyph(charCode: number): GrafikkFontGlyph {
 		const glyph = this.memoryface.loadChar(charCode, {
 			render: true,
-			loadTarget: freetype.RenderMode.NORMAL
+			loadTarget: freetype.RenderMode.MONO
 		});
 		return glyph
 	}
