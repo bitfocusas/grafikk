@@ -14,7 +14,7 @@ $(function() {
 	socket.on('render', function(id, specification, render) {
 		const inputbuffer = new Uint8Array(render.buffer);
 
-		let $rw = $c.find('#render_' + id);
+		let $rw = $('#render_' + id);
 
 		//console.log({ render });
 		if (!$rw.length) {
@@ -29,9 +29,6 @@ $(function() {
 					specification.pixelsH +
 					'">'
 			)
-				.attr({
-					id: 'render_' + id
-				})
 				.css({
 					backgroundColor: 'black'
 				})
