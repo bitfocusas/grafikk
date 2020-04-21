@@ -19,7 +19,7 @@ $(function() {
 		//console.log({ render });
 		if (!$rw.length) {
 			$rw = $('<div class="renderWindow" id="render_' + id + '"></div>');
-			$rw.html('<h1>' + id + '</h1>');
+			$rw.html('<h1>' + id + ' ('+specification.pixelsW+'x'+specification.pixelsH+')</h1>');
 			$c.append($rw);
 
 			let $canvas = $(

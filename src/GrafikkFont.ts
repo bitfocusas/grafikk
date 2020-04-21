@@ -145,7 +145,7 @@ export default class GrafikkFont {
 		// Vertical align
 
 		// Top
-		let posY = fromY + (this.face.safety/2)
+		let posY = fromY + 1
 
 		// Middle
 		if (
@@ -162,7 +162,7 @@ export default class GrafikkFont {
 			alignment === GrafikkFontAlign.BOTTOM_CENTER || 
 			alignment === GrafikkFontAlign.BOTTOM_RIGHT
 		) {
-			posY = toY - this.face.size
+			posY = toY - this.face.size + (this.grafikk.outputSpecification.pixelsH > 32 ? 2 : 0)
 		}
 		
 		// Horizontal align
@@ -265,7 +265,7 @@ export default class GrafikkFont {
 
 		// Find the box size in pixels
 		const availableWidth = toX - fromX
-		//const availableHeight = toY - fromY
+		const availableHeight = toY - fromY
 
 		// Background fill
 		if (!this.grafikk.outputSpecification.mono) {
@@ -283,10 +283,16 @@ export default class GrafikkFont {
 		const currentWidth = this.glyphsWidth(glyphs)
 
 		// If the text exceeds the box, scale the font size down!
-		if (availableWidth < currentWidth) {
+		if (availableWidth < currentWidth || availableHeight < currentSize) {
+
 			const calculatedScale = (availableWidth-this.face.safety) / currentWidth
-			const calculatedFontSize = currentSize * calculatedScale
-			if (calculatedFontSize > 11) { 
+			let calculatedFontSize = currentSize * calculatedScale
+
+			if (calculatedFontSize > availableHeight) {
+				calculatedFontSize = availableHeight
+			}
+
+			if (calculatedFontSize >= 11) { 
 				this.setSize(calculatedFontSize) 
 			}
 			else {
@@ -297,6 +303,9 @@ export default class GrafikkFont {
 			}
 			glyphs = this.glyphsFromString(text)				
 		}
+
+
+
 
 		/*
 		this.grafikk.drawHorizontalLinePercent( fromYpercent, { r: 255, g: 255, b: 255 })

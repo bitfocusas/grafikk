@@ -172,29 +172,34 @@ export default class Grafikk {
 
 		// Draw context section
 		let fontContext = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
+		let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12
+		let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight
+
 		fontContext.centerTextBox(
-			0, 0, 100, 35, 
+			0, 0, 100, topBarPercent, 
 			this.outputSpecification.pixelsH/100*35, 
 			this.inputSpecification.contextValue, 
 			this.inputSpecification.contextColorText,
 			this.inputSpecification.contextColorBackground,
-			GrafikkFontAlign.TOP_CENTER
+			GrafikkFontAlign.BOTTOM_CENTER
 		)
+
+		
 
 		// Draw main section
 		let fontMain = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
 
 		fontMain.centerTextBox(
-			0, 35, 100, 100, 
+			0, topBarPercent, 100, 100, 
 			this.outputSpecification.pixelsH/100*(100-35), 
 			this.inputSpecification.mainValue, 
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
-			GrafikkFontAlign.BOTTOM_RIGHT
+			GrafikkFontAlign.MIDDLE_CENTER
 		)
 	
 		// Line between context and main section
-		this.drawHorizontalLinePercent(35, { r: 255, g: 255, b: 255 })
+		this.drawHorizontalLinePercent(topBarPercent, { r: 128, g: 128, b: 128 })
 
 
 		let outputResult: GrafikkOutput = {

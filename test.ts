@@ -32,17 +32,9 @@ const tests: testInterface[] = [
 	{ id: 'streamdeckNormal', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
 	{ id: 'streamdeckXL', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
 	{ id: 'streamdeckMini', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
-	{ id: 'skaarhojSmall1', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 32, mono: true },
-	{ id: 'skaarhojWide1', physicalW: 26.8, physicalH: 7.6, pixelsW: 128, pixelsH: 32, mono: true },
-	{ id: 'streamdeckNormal1', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
-	{ id: 'streamdeckX1L', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
-	{ id: 'streamdeckMini1', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
-	{ id: 'skaarhojSmall2', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 32, mono: true },
-	{ id: 'skaarhojWide2', physicalW: 26.8, physicalH: 7.6, pixelsW: 128, pixelsH: 32, mono: true },
-	{ id: 'streamdeckNormal2', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
-	{ id: 'streamdeckXL2', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
-	{ id: 'streamdeckMini2', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
-
+	{ id: 'esp32-btc-oled', physicalW: 1, physicalH: 1, pixelsW: 128, pixelsH: 64, mono: false },
+	{ id: 'esp32-btc-tft', physicalW: 1, physicalH: 1, pixelsW: 135, pixelsH: 240, mono: true },
+	{ id: 'esp32-btc-vet', physicalW: 1, physicalH: 1, pixelsW: 240, pixelsH: 135, mono: true },
 ]
 
 function randColor() {
