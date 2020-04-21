@@ -1,7 +1,12 @@
 import GrafikkFont from './GrafikkFont'
 
 export interface GrafikkInputSpecification {
-	text: string;
+	mainValue: string;
+	contextValue: string;
+	mainColorBackground: GrafikkColorRGB;
+	mainColorText: GrafikkColorRGB;
+	contextColorBackground: GrafikkColorRGB;
+	contextColorText: GrafikkColorRGB;
 }
 
 export interface GrafikkOutput {
@@ -27,7 +32,12 @@ export interface GrafikkOutputSpecification {
 export default class Grafikk {
 
 	public inputSpecification: GrafikkInputSpecification = {
-		text: 'None'
+		mainValue: 'No text',
+		contextValue: 'No context',
+		mainColorBackground: { r: 0, g: 0, b: 0},
+		mainColorText: { r: 0, g: 0, b: 0},
+		contextColorBackground: { r: 50, g: 0, b: 0},
+		contextColorText: { r: 255, g: 190, b: 0},
 	}
 
 	public outputBuffer: Buffer
@@ -107,8 +117,11 @@ export default class Grafikk {
 			return
 		}
 
-		if (typeof color !== 'boolean' && this.outputSpecification.mono) {
-			this.drawMonoPixel(x, y, color.r || color.g || color.b > 0 ? true : false
+		if (typeof color !== 'boolean' && color !== undefined && this.outputSpecification.mono) {
+			this.drawMonoPixel(
+				x, 
+				y, 
+				color.r || color.g || color.b > 0 ? true : false
 			);
 		} else if (this.outputSpecification.mono) {
 			this.drawMonoPixel(x, y, !!color);
@@ -123,14 +136,14 @@ export default class Grafikk {
 		}
 	}
 
-	drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB) {
-		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
+	drawHorizontalLine(x: number, color: boolean | GrafikkColorRGB) {
+		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
 			this.drawPixel(x, y, color);
 		}
 	}
 
-	drawVerticalLine(x: number, color: boolean | GrafikkColorRGB) {
-		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
+	drawVerticalLine(y: number, color: boolean | GrafikkColorRGB) {
+		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
 			this.drawPixel(x, y, color);
 		}
 	}
@@ -144,15 +157,16 @@ export default class Grafikk {
 			...inputSpecification
 		}
 
-		//this.drawHorizontalLine(this.outputSpecification.pixelsH / 3, { r: 255, g: 255, b: 255 })
+		this.drawHorizontalLine(this.outputSpecification.pixelsH / 3, { r: 255, g: 255, b: 255 })
 
 		let font = new GrafikkFont(this, __dirname + "/../Arial.ttf")
 
 		font.centerTextBox(
-			0, 0, 100, 100, 
+			2, 2, 70, 50, 
 			this.outputSpecification.pixelsH / 3, 
-			this.inputSpecification.text, 
-			{ r: 255, g: 190, b: 0 }
+			this.inputSpecification.mainValue, 
+			this.inputSpecification.mainColorText,
+			this.inputSpecification.mainColorBackground,
 		)
 
 		let outputResult: GrafikkOutput = {
