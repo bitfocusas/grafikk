@@ -84,10 +84,11 @@ export default class Grafikk {
 	}
 
 	drawMonoPixel(x: number, y: number, color: boolean) {
-		let index = Math.floor(x / 8) + y * Math.floor(this.outputSpecification.pixelsW / 8)
+		let bitPos = x + (y * this.outputSpecification.pixelsW)
+		let index = Math.floor(bitPos / 8)
 		let was = this.outputBuffer.readUInt8(index)
 
-		let bit = 1 << (x % 8);
+		let bit = 1 << (bitPos % 8);
 		if (color) {
 			this.outputBuffer.writeUInt8(
 				was | bit,
