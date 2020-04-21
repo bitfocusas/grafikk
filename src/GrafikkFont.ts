@@ -232,7 +232,7 @@ export default class GrafikkFont {
 		if (availableWidth < currentWidth) {
 			const calculatedScale = availableWidth / currentWidth
 			const calculatedFontSize = currentSize * calculatedScale
-			this.setSize(calculatedFontSize)
+			this.setSize(calculatedFontSize > 11 ? calculatedFontSize : 11)
 			glyphs = this.glyphsFromString(text)				
 		}
 

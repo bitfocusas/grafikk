@@ -4,8 +4,11 @@ $(function() {
 
 	var $c = $('#container');
 
-	$('#textfield').keyup(function() {
-		socket.emit('updateText', $(this).val());
+	$('#textMain').keyup(function() {
+		socket.emit('updateMain', $(this).val());
+	});
+	$('#textContext').keyup(function() {
+		socket.emit('updateContext', $(this).val());
 	});
 
 	socket.on('render', function(id, specification, render) {

@@ -1,19 +1,20 @@
-process.env.DEBUG_DEPTH = '10';
-import Grafikk from './src/Grafikk'; //'./dist/Grafikk';
-import * as Debug from 'debug';
-const debug = Debug('test');
+process.env.DEBUG_DEPTH = '10'
+import Grafikk from './src/Grafikk' //'./dist/Grafikk';
+import * as Debug from 'debug'
+const debug = Debug('test')
 
 /* socket.io world */
 var http = require('http');
-var express = require('express');
-var app = express();
-var options = {};
-app.use(express.static('public'));
+var express = require('express')
+var app = express()
+var options = {}
+app.use(express.static('public'))
 var serverPort = 3000;
-var server = http.createServer(options, app);
-var io = require('socket.io')(server);
+var server = http.createServer(options, app)
+var io = require('socket.io')(server)
 
-let currentRenderText = "Abc";
+let currentRenderContext = "AUX 1"
+let currentRenderMain = "Input 2"
 
 interface testInterface {
 	id: string;
@@ -31,6 +32,17 @@ const tests: testInterface[] = [
 	{ id: 'streamdeckNormal', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
 	{ id: 'streamdeckXL', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
 	{ id: 'streamdeckMini', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
+	{ id: 'skaarhojSmall1', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 32, mono: true },
+	{ id: 'skaarhojWide1', physicalW: 26.8, physicalH: 7.6, pixelsW: 128, pixelsH: 32, mono: true },
+	{ id: 'streamdeckNormal1', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
+	{ id: 'streamdeckX1L', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
+	{ id: 'streamdeckMini1', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
+	{ id: 'skaarhojSmall2', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 32, mono: true },
+	{ id: 'skaarhojWide2', physicalW: 26.8, physicalH: 7.6, pixelsW: 128, pixelsH: 32, mono: true },
+	{ id: 'streamdeckNormal2', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
+	{ id: 'streamdeckXL2', physicalW: 14, physicalH: 14, pixelsW: 96, pixelsH: 96, mono: false },
+	{ id: 'streamdeckMini2', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
+
 ]
 
 function randColor() {
@@ -61,14 +73,14 @@ function update() {
 			debug(`Going to generate ${outputSpecification.pixelsW}x${outputSpecification.pixelsH}`)
 			let now = Date.now();
 			outputSpecification.gfx.generate({
-				mainValue: currentRenderText,
-				contextValue: currentRenderText,
+				mainValue: currentRenderMain,
+				contextValue: currentRenderContext,
 				mainColorBackground: { r: 0, g: 0,  b: 0 },
 				mainColorText: randColor(),
 				contextColorBackground: { r: 40,   g: 30,  b: 20 },
 				contextColorText: { r: 255, g: 128,  b: 0 },
 			})
-			console.log("time spent", (Date.now() - now),"ms");
+			console.log("time spent", (Date.now() - now),"ms")
 			debug('done')
 		}
 	})
@@ -77,8 +89,14 @@ function update() {
 io.on('connection', (socket: { on: (arg0: string, arg1: (text: any) => void) => void; }) => {
 	update();
 
-	socket.on('updateText', (text: string) => {
-		currentRenderText = text
+	socket.on('updateMain', (text: string) => {
+		currentRenderMain = text
 		update()
 	})
+
+	socket.on('updateContext', (text: string) => {
+		currentRenderContext = text
+		update()
+	})
+
 })
