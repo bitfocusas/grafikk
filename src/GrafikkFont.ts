@@ -15,6 +15,18 @@ export interface GrafikkFontGlyph {
 	bitmap: GrafikkFontGlyphBitmap;
 }
 
+export const GrafikkFontAlign = {
+	TOP_LEFT: 1,
+	TOP_CENTER: 2,
+	TOP_RIGHT: 3,
+	MIDDLE_LEFT: 4,
+	MIDDLE_CENTER: 5,
+	MIDDLE_RIGHT: 6,
+	BOTTOM_LEFT: 7,
+	BOTTOM_CENTER: 8,
+	BOTTOM_RIGHT: 9
+}
+
 export interface GrafikkFontGlyphBitmap {
 	width: number;
 	height: number;
@@ -114,6 +126,7 @@ export default class GrafikkFont {
 		pixelSize: number
 	) {
 		this.face.size = pixelSize
+		this.face.safety = this.face.size / 2.2
 		this.memoryface.setPixelSizes(0, pixelSize)
 	}
 
@@ -123,16 +136,56 @@ export default class GrafikkFont {
 		fromY: number, 
 		toX: number, 
 		toY: number, 
-		color: GrafikkColorRGB
+		color: GrafikkColorRGB,
+		alignment: number,
 	) {
-
+		
 		let glyphWidth = this.glyphsWidth(glyphs)
 
 		// Vertical align
-		let posY = fromY + ((toY-fromY)/2) - (this.face.size / 2)
 
+		// Top
+		let posY = fromY + (this.face.safety/2)
+
+		// Middle
+		if (
+			alignment === GrafikkFontAlign.MIDDLE_LEFT || 
+			alignment === GrafikkFontAlign.MIDDLE_CENTER || 
+			alignment === GrafikkFontAlign.MIDDLE_RIGHT
+		) {
+			posY = fromY + ((toY-fromY)/2) - (this.face.size / 2)
+		}
+
+		// Bottom
+		else if (
+			alignment === GrafikkFontAlign.BOTTOM_LEFT || 
+			alignment === GrafikkFontAlign.BOTTOM_CENTER || 
+			alignment === GrafikkFontAlign.BOTTOM_RIGHT
+		) {
+			posY = toY - this.face.size
+		}
+		
 		// Horizontal align
-		let posX = fromX + ((toX-fromX)/2) - (glyphWidth/2)
+
+		// Left
+		let posX = fromX + (this.face.safety/2)
+
+		// Center
+		if (
+			alignment === GrafikkFontAlign.BOTTOM_CENTER || 
+			alignment === GrafikkFontAlign.MIDDLE_CENTER || 
+			alignment === GrafikkFontAlign.TOP_CENTER
+		) {
+			posX = fromX + ((toX-fromX)/2) - (glyphWidth/2)
+		}
+	
+		else if (
+			alignment === GrafikkFontAlign.BOTTOM_RIGHT || 
+			alignment === GrafikkFontAlign.MIDDLE_RIGHT || 
+			alignment === GrafikkFontAlign.TOP_RIGHT
+		) {
+			posX = toX - glyphWidth - (this.face.safety/4)
+		}
 
 		glyphs.forEach(glyph => {
 			if (glyph.bitmap !== null) {
@@ -201,6 +254,7 @@ export default class GrafikkFont {
 		text: string,
 		color: GrafikkColorRGB,
 		background: GrafikkColorRGB,
+		alignment: number,
 	): void {
 
 		// Guide lines for debug
@@ -230,9 +284,17 @@ export default class GrafikkFont {
 
 		// If the text exceeds the box, scale the font size down!
 		if (availableWidth < currentWidth) {
-			const calculatedScale = availableWidth / currentWidth
+			const calculatedScale = (availableWidth-this.face.safety) / currentWidth
 			const calculatedFontSize = currentSize * calculatedScale
-			this.setSize(calculatedFontSize > 11 ? calculatedFontSize : 11)
+			if (calculatedFontSize > 11) { 
+				this.setSize(calculatedFontSize) 
+			}
+			else {
+				this.setSize(11)
+				if (alignment === GrafikkFontAlign.BOTTOM_CENTER) alignment = GrafikkFontAlign.BOTTOM_LEFT
+				else if (alignment === GrafikkFontAlign.MIDDLE_CENTER) alignment = GrafikkFontAlign.MIDDLE_LEFT
+				else if (alignment === GrafikkFontAlign.TOP_CENTER) alignment = GrafikkFontAlign.TOP_LEFT				
+			}
 			glyphs = this.glyphsFromString(text)				
 		}
 
@@ -243,7 +305,7 @@ export default class GrafikkFont {
 		this.grafikk.drawVerticalLinePercent( toXpercent, { r: 255, g: 255, b: 255 })
 		*/
 		
-		this.glyphsDraw(glyphs,fromX,fromY,toX,toY,color)
+		this.glyphsDraw(glyphs, fromX - 2, fromY, toX, toY, color, alignment)
 
 	}
 

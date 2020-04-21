@@ -1,4 +1,4 @@
-import GrafikkFont from './GrafikkFont'
+import GrafikkFont, { GrafikkFontAlign } from './GrafikkFont'
 
 export interface GrafikkInputSpecification {
 	mainValue: string;
@@ -178,6 +178,7 @@ export default class Grafikk {
 			this.inputSpecification.contextValue, 
 			this.inputSpecification.contextColorText,
 			this.inputSpecification.contextColorBackground,
+			GrafikkFontAlign.TOP_CENTER
 		)
 
 		// Draw main section
@@ -189,8 +190,9 @@ export default class Grafikk {
 			this.inputSpecification.mainValue, 
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
+			GrafikkFontAlign.BOTTOM_RIGHT
 		)
-
+	
 		// Line between context and main section
 		this.drawHorizontalLinePercent(35, { r: 255, g: 255, b: 255 })
 

@@ -71,7 +71,6 @@ function update() {
 	tests.forEach(outputSpecification => {
 		if (outputSpecification.gfx) {
 			debug(`Going to generate ${outputSpecification.pixelsW}x${outputSpecification.pixelsH}`)
-			let now = Date.now();
 			outputSpecification.gfx.generate({
 				mainValue: currentRenderMain,
 				contextValue: currentRenderContext,
@@ -80,8 +79,6 @@ function update() {
 				contextColorBackground: { r: 40,   g: 30,  b: 20 },
 				contextColorText: { r: 255, g: 128,  b: 0 },
 			})
-			console.log("time spent", (Date.now() - now),"ms")
-			debug('done')
 		}
 	})
 }
