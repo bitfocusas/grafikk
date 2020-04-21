@@ -32,6 +32,21 @@ const tests = [
 	{ id: 'streamdeckMini', physicalW: 14, physicalH: 14, pixelsW: 80, pixelsH: 80, mono: false },
 ]
 
+
+function randColor() {
+
+	let meh = [
+		{ r: 255, g: 0,    b: 0 },
+		{ r: 0,   g: 255 , b: 0 },
+		{ r: 255, g: 0,    b: 255 },
+		{ r: 0,   g: 255,  b: 255 },
+		{ r: 255, g: 128,  b: 0 },
+		{ r: 0,   g: 128 , b: 255 },
+	]
+
+	return meh[Math.floor(Math.random() * meh.length) - 1]
+}
+
 tests.map(outputSpecification => {
 
 	const gfx = new Grafikk(outputSpecification, (renderResult) => {
@@ -40,10 +55,11 @@ tests.map(outputSpecification => {
 
 	setInterval(() => {
 		gfx.generate({
-			text: currentRenderText
+			text: currentRenderText,
+			colorBackground: randColor(),
+			colorText: randColor(),
 		})
 	}, 200)
-
 
 })
 

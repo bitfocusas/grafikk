@@ -99,6 +99,9 @@ export default class Grafikk {
 	}
 
 	drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB) {
+		
+		x = Math.round(x)
+		y = Math.round(y)
 
 		if (x < 0 || y < 0 || x >= this.outputSpecification.pixelsW || y >= this.outputSpecification.pixelsH) {
 			return
@@ -141,10 +144,16 @@ export default class Grafikk {
 			...inputSpecification
 		}
 
-		this.drawHorizontalLine(Math.round(this.outputSpecification.pixelsH / 100 * 60), { r: 255, g: 255, b: 255 })
+		//this.drawHorizontalLine(this.outputSpecification.pixelsH / 3, { r: 255, g: 255, b: 255 })
 
 		let font = new GrafikkFont(this, __dirname + "/../Arial.ttf")
-		font.centerTextBox(10, 60, 100, 100, this.outputSpecification.pixelsH / 2, this.inputSpecification.text, { r: 255, g: 255, b: 255 })
+
+		font.centerTextBox(
+			0, 0, 100, 100, 
+			this.outputSpecification.pixelsH / 3, 
+			this.inputSpecification.text, 
+			{ r: 255, g: 190, b: 0 }
+		)
 
 		let outputResult: GrafikkOutput = {
 			error: null,

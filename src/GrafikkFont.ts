@@ -90,16 +90,15 @@ export default class GrafikkFont {
 		this.memoryface.setPixelSizes(0, pixelSize)
 	}
 
-	glyphDraw(glyph: any, _fromX: number, _fromY: number, color: GrafikkColorRGB) {
+	glyphDraw(glyph: any, fromX: number, fromY: number, color: GrafikkColorRGB) {
 		let i = 0;
 		for (let y = 0; y < glyph.bitmap.height; ++y) {
 			for (let x = 0; x < glyph.bitmap.width; ++x) {
-				let shouldDraw: boolean = (glyph.bitmap.buffer[i++] > 127)
-
+				let shouldDraw: boolean = (glyph.bitmap.buffer[i++] > 100)
 				if (shouldDraw) {
 					this.grafikk.drawPixel(
-						_fromX + x,
-						_fromY + y,
+						fromX + x,
+						fromY + y,
 						color
 					)
 				}
@@ -110,8 +109,8 @@ export default class GrafikkFont {
 	centerTextBox(
 		fromXpercent: number,
 		fromYpercent: number,
-		_toXpercent: number,
-		_toYpercent: number,
+		toXpercent: number,
+		toYpercent: number,
 		size: number,
 		text: string,
 		color: GrafikkColorRGB,
@@ -119,19 +118,32 @@ export default class GrafikkFont {
 
 		const fromX = Math.floor(this.grafikk.outputSpecification.pixelsW / 100 * fromXpercent)
 		const fromY = Math.floor(this.grafikk.outputSpecification.pixelsH / 100 * fromYpercent)
-		//const toX = Math.floor(this.grafikk.outputSpecification.pixelsW / 100 * toXpercent)
-		//const toY = Math.floor(this.grafikk.outputSpecification.pixelsH / 100 * toYpercent)
+		const toX = Math.floor(this.grafikk.outputSpecification.pixelsW / 100 * toXpercent)
+		const toY = Math.floor(this.grafikk.outputSpecification.pixelsH / 100 * toYpercent)
 
 		this.setSize(size)
 
 		const glyphs = this.glyphsFromString(text)
 
+		this.grafikk.drawHorizontalLine( fromX, { r: 255, g: 255, b: 255 })
+		this.grafikk.drawHorizontalLine( toX, { r: 255, g: 255, b: 255 })
+		this.grafikk.drawVerticalLine( fromY, { r: 255, g: 255, b: 255 })
+		this.grafikk.drawVerticalLine( toY, { r: 255, g: 255, b: 255 })
+
 		let posX = fromX
+
 		glyphs.forEach(glyph => {
 			if (glyph.bitmap !== null) {
-				this.glyphDraw(glyph, posX + glyph.bitmapLeft, fromY - glyph.bitmapTop, color)
-				posX += glyph.bitmap.width + glyph.bitmapLeft
+				this.glyphDraw(glyph,
+					posX + glyph.bitmapLeft, 
+					fromY - glyph.bitmapTop + (this.face.size/10*8) - 1, 
+					color
+				)
+				posX += glyph.bitmap.width + glyph.bitmapLeft + Math.round(this.face.size / 20)
+			} else {
+				posX += Math.round(this.face.size / 4)
 			}
+
 		})
 
 	}
