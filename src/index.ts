@@ -1,6 +1,4 @@
-const Grafikk = require('./Grafikk');
-const GrafikkFont = require('./GrafikkFont');
+import Grafikk from './Grafikk'
+import GrafikkFont from './GrafikkFont'
 
-module.exports = exports = {
-	Grafikk, GrafikkFont
-}
+export default { Grafikk, GrafikkFont }
