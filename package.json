@@ -13,7 +13,7 @@
 		"lint": "tslint --project tsconfig.json --config tslint.json",
 		"lint-fix": "eslint --fix test.js index.js src",
 		"coverage": "nyc npm run test",
-		"prepare": "npm run build"
+		"prepare": "yarn build"
 	},
 	"keywords": [],
 	"author": "William Viker <william@bitfocus.io>",
