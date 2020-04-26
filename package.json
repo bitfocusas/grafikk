@@ -1,19 +1,20 @@
 {
-	"name": "grafikk",
+	"name": "@bitfocusas/grafikk",
 	"version": "1.0.0",
-	"bitnet_protocol_version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"start": "nodemon --exec node -r ts-node/register test.ts",
-		"tsc": "tsc",
+		"build": "tsc",
 		"testscript": "node -r ts-node/register test.ts",
 		"build:doc": "typedoc",
 		"build:main": "tsc -p tsconfig.build.json",
 		"test": "mocha -r ts-node/register src/tests/*.test.ts",
 		"lint": "tslint --project tsconfig.json --config tslint.json",
 		"lint-fix": "eslint --fix test.js index.js src",
-		"coverage": "nyc npm run test"
+		"coverage": "nyc npm run test",
+		"prepare": "npm run build"
 	},
 	"keywords": [],
 	"author": "Håkon Nessjøen <haakon@bitfocus.io>",
