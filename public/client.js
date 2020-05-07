@@ -49,7 +49,7 @@ $(function() {
 				bit++
 			) {
 				let byte = Math.floor(bit / 8);
-				let n = (bit / 8 - byte) * 8;
+				let n = 7 - (bit % 8);
 				let val = (inputbuffer[byte] & (1 << n)) >> n;
 				if (val) {
 					buffer[bit * 4 + 0] = val ? 255 : 0;
