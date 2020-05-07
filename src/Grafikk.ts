@@ -88,7 +88,7 @@ export default class Grafikk {
 		let index = Math.floor(bitPos / 8)
 		let was = this.outputBuffer.readUInt8(index)
 
-		let bit = 1 << (bitPos % 8);
+		let bit = 1 << (7-(bitPos % 8));
 		if (color) {
 			this.outputBuffer.writeUInt8(
 				was | bit,
