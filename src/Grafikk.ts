@@ -110,7 +110,7 @@ export default class Grafikk {
 	}
 
 	drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB) {
-		
+
 		x = Math.round(x)
 		y = Math.round(y)
 
@@ -120,15 +120,15 @@ export default class Grafikk {
 
 		if (typeof color !== 'boolean' && color !== undefined && this.outputSpecification.mono) {
 			this.drawMonoPixel(
-				x, 
-				y, 
+				x,
+				y,
 				color.r || color.g || color.b > 0 ? true : false
 			);
-		} 
+		}
 
 		else if (this.outputSpecification.mono) {
 			this.drawMonoPixel(x, y, !!color);
-		} 
+		}
 
 		else if (typeof color === 'boolean') {
 			this.drawRGBPixel(x, y, <GrafikkColorRGB>{
@@ -136,12 +136,18 @@ export default class Grafikk {
 				g: color ? 255 : 0,
 				b: color ? 255 : 0
 			});
-		} 
-		
+		}
+
 		else {
 			this.drawRGBPixel(x, y, <GrafikkColorRGB>color);
 		}
 	}
+
+	drawHorizontalDottedLine(y: number, pixeljump: number, color: boolean | GrafikkColorRGB) {
+		for (var x = 0; x < this.outputSpecification.pixelsW; x += pixeljump) {
+			this.drawPixel(x, y, color);
+		}
+  }
 
 	drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB) {
 		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
@@ -153,6 +159,10 @@ export default class Grafikk {
 		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
 			this.drawPixel(x, y, color);
 		}
+  }
+
+	drawHorizontalDottedLinePercent(yPercent: number, pixeljump: number, color: boolean | GrafikkColorRGB) {
+		this.drawHorizontalDottedLine(Math.round(this.outputSpecification.pixelsH / 100 * yPercent), pixeljump, color)
 	}
 
 	drawHorizontalLinePercent(yPercent: number, color: boolean | GrafikkColorRGB) {
@@ -178,30 +188,30 @@ export default class Grafikk {
 		let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1)
 
 		fontContext.centerTextBox(
-			0, 0, 100, topBarPercent, 
-			this.outputSpecification.pixelsH/100*35, 
-			this.inputSpecification.contextValue, 
+			0, 0, 100, topBarPercent,
+			this.outputSpecification.pixelsH/100*35,
+			this.inputSpecification.contextValue || 'AUX1',
 			this.inputSpecification.contextColorText,
 			this.inputSpecification.contextColorBackground,
 			GrafikkFontAlign.BOTTOM_CENTER
 		)
 
-		
+
 
 		// Draw main section
 		let fontMain = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
 
 		fontMain.centerTextBox(
-			0, topBarPercentPlus, 100, 100, 
-			this.outputSpecification.pixelsH/100*(100-35), 
-			this.inputSpecification.mainValue, 
+			0, topBarPercentPlus, 100, 100,
+			this.outputSpecification.pixelsH/100*(100-35),
+			this.inputSpecification.mainValue,
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
 			GrafikkFontAlign.MIDDLE_CENTER
 		)
-	
+
 		// Line between context and main section
-		this.drawHorizontalLinePercent(topBarPercent, { r: 128, g: 128, b: 128 })
+		this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 })
 
 
 		let outputResult: GrafikkOutput = {
