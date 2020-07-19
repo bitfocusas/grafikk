@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
 const freetype = require('@julusian/freetype2');
 exports.GrafikkFontAlign = {
     TOP_LEFT: 1,
@@ -26,7 +25,7 @@ class GrafikkFont {
     }
     setFace(fontPath) {
         this.fontPath = fontPath;
-        this.memoryface = freetype.NewMemoryFace(fs.readFileSync(this.fontPath));
+        this.memoryface = freetype.NewFace(this.fontPath);
     }
     charCodes(textString) {
         return textString.split('').map(c => c.charCodeAt(0));
@@ -51,7 +50,7 @@ class GrafikkFont {
     }
     setSize(pixelSize) {
         this.face.size = pixelSize;
-        this.face.safety = this.face.size / 2.2;
+        this.face.safety = this.face.size / 2.8;
         this.memoryface.setPixelSizes(0, pixelSize);
     }
     glyphsDraw(glyphs, fromX, fromY, toX, toY, color, alignment) {

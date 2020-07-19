@@ -37,9 +37,10 @@ class Grafikk {
         this.outputBuffer.fill(0);
     }
     drawMonoPixel(x, y, color) {
-        let index = Math.floor(x / 8) + y * Math.floor(this.outputSpecification.pixelsW / 8);
+        let bitPos = x + (y * this.outputSpecification.pixelsW);
+        let index = Math.floor(bitPos / 8);
         let was = this.outputBuffer.readUInt8(index);
-        let bit = 1 << (x % 8);
+        let bit = 1 << (7 - (bitPos % 8));
         if (color) {
             this.outputBuffer.writeUInt8(was | bit, index);
         }
@@ -76,6 +77,11 @@ class Grafikk {
             this.drawRGBPixel(x, y, color);
         }
     }
+    drawHorizontalDottedLine(y, pixeljump, color) {
+        for (var x = 0; x < this.outputSpecification.pixelsW; x += pixeljump) {
+            this.drawPixel(x, y, color);
+        }
+    }
     drawHorizontalLine(y, color) {
         for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
             this.drawPixel(x, y, color);
@@ -85,6 +91,9 @@ class Grafikk {
         for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
             this.drawPixel(x, y, color);
         }
+    }
+    drawHorizontalDottedLinePercent(yPercent, pixeljump, color) {
+        this.drawHorizontalDottedLine(Math.round(this.outputSpecification.pixelsH / 100 * yPercent), pixeljump, color);
     }
     drawHorizontalLinePercent(yPercent, color) {
         this.drawHorizontalLine(Math.round(this.outputSpecification.pixelsH / 100 * yPercent), color);
@@ -99,14 +108,13 @@ class Grafikk {
         let fontContext = new GrafikkFont_1.default(this, __dirname + "/../TTNorms-Medium.otf");
         let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12;
         let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight;
-        fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue, this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
+        let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1);
+        fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue || 'AUX1', this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
         // Draw main section
         let fontMain = new GrafikkFont_1.default(this, __dirname + "/../TTNorms-Medium.otf");
-        fontMain.centerTextBox(0, topBarPercent, 100, 100, this.outputSpecification.pixelsH / 100 * (100 - 35), this.inputSpecification.mainValue, this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
+        fontMain.centerTextBox(0, topBarPercentPlus, 100, 100, this.outputSpecification.pixelsH / 100 * (100 - 35), this.inputSpecification.mainValue, this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
         // Line between context and main section
-        this.drawHorizontalLinePercent(topBarPercent, { r: 128, g: 128, b: 128 });
-        this.drawHorizontalLinePercent(50, { r: 128, g: 128, b: 128 });
-        this.drawVerticalLinePercent(50, { r: 128, g: 128, b: 128 });
+        this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 });
         let outputResult = {
             error: null,
             buffer: this.outputBuffer

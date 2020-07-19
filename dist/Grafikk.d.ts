@@ -35,8 +35,10 @@ export default class Grafikk {
     drawMonoPixel(x: number, y: number, color: boolean): void;
     drawRGBPixel(x: number, y: number, color: GrafikkColorRGB): void;
     drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB): void;
+    drawHorizontalDottedLine(y: number, pixeljump: number, color: boolean | GrafikkColorRGB): void;
     drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB): void;
     drawVerticalLine(x: number, color: boolean | GrafikkColorRGB): void;
+    drawHorizontalDottedLinePercent(yPercent: number, pixeljump: number, color: boolean | GrafikkColorRGB): void;
     drawHorizontalLinePercent(yPercent: number, color: boolean | GrafikkColorRGB): void;
     drawVerticalLinePercent(xPercent: number, color: boolean | GrafikkColorRGB): void;
     generate(inputSpecification: GrafikkInputSpecification): void;
