@@ -9,7 +9,7 @@ var express = require('express')
 var app = express()
 var options = {}
 app.use(express.static('public'))
-var serverPort = 3000;
+var serverPort = 3009;
 var server = http.createServer(options, app)
 var io = require('socket.io')(server)
 

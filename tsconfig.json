@@ -1,49 +1,11 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "strictNullChecks": true,
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "moduleResolution": "node",
-        "sourceMap": false,
-        "outDir": "dist",
-        "baseUrl": "src",
-        "paths": {
-            "*": [
-                "node_modules/*",
-                "types/*"
-            ]
-        },
-        "declaration": true,
-        "importHelpers": false,
-        "listFiles": false,
-        "traceResolution": false,
-        "pretty": true,
-        "lib": [
-            "es6"
-        ],
-        "types": [
-			"node",
-			"mocha",
-			"chai"
-        ],
-        "typeRoots": [
-            "./node_modules/@types",
-            "./src/types"
-        ]
-    },
-    "include": [
-		"src/*.ts",
-		"src/types/*.ts"
-    ],
-    "compileOnSave": false,
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": false
+  },
+  "include": ["src/*.ts"],
+  "exclude": ["node_modules", "**/__tests__/*"]
 }
