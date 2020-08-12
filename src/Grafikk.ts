@@ -190,7 +190,7 @@ export default class Grafikk {
 		fontContext.centerTextBox(
 			0, 0, 100, topBarPercent,
 			this.outputSpecification.pixelsH/100*35,
-			this.inputSpecification.contextValue || 'AUX1',
+			this.inputSpecification.contextValue || '',
 			this.inputSpecification.contextColorText,
 			this.inputSpecification.contextColorBackground,
 			GrafikkFontAlign.BOTTOM_CENTER
@@ -204,7 +204,7 @@ export default class Grafikk {
 		fontMain.centerTextBox(
 			0, topBarPercentPlus, 100, 100,
 			this.outputSpecification.pixelsH/100*(100-35),
-			this.inputSpecification.mainValue,
+			this.inputSpecification.mainValue || '',
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
 			GrafikkFontAlign.MIDDLE_CENTER
