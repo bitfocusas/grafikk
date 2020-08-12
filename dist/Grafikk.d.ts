@@ -6,6 +6,7 @@ export interface GrafikkInputSpecification {
     mainColorText: GrafikkColorRGB;
     contextColorBackground: GrafikkColorRGB;
     contextColorText: GrafikkColorRGB;
+    fontPath: string;
 }
 export interface GrafikkOutput {
     error: string | null;

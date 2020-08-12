@@ -4,12 +4,13 @@ const GrafikkFont_1 = require("./GrafikkFont");
 class Grafikk {
     constructor(outputSpecification, outputCallback) {
         this.inputSpecification = {
-            mainValue: 'No text',
-            contextValue: 'No context',
+            mainValue: '',
+            contextValue: '',
             mainColorBackground: { r: 0, g: 0, b: 0 },
             mainColorText: { r: 0, g: 0, b: 0 },
             contextColorBackground: { r: 50, g: 0, b: 0 },
             contextColorText: { r: 255, g: 190, b: 0 },
+            fontPath: __dirname + "/../TTNorms-Medium.otf",
         };
         this.outputSpecification = {
             id: undefined,
@@ -105,14 +106,14 @@ class Grafikk {
         this.outputBufferClear();
         this.inputSpecification = Object.assign(Object.assign({}, this.inputSpecification), inputSpecification);
         // Draw context section
-        let fontContext = new GrafikkFont_1.default(this, __dirname + "/../TTNorms-Medium.otf");
+        let fontContext = new GrafikkFont_1.default(this, this.inputSpecification.fontPath);
         let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12;
         let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight;
         let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1);
-        fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue || 'AUX1', this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
+        fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue || '', this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
         // Draw main section
-        let fontMain = new GrafikkFont_1.default(this, __dirname + "/../TTNorms-Medium.otf");
-        fontMain.centerTextBox(0, topBarPercentPlus, 100, 100, this.outputSpecification.pixelsH / 100 * (100 - 35), this.inputSpecification.mainValue, this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
+        let fontMain = new GrafikkFont_1.default(this, this.inputSpecification.fontPath);
+        fontMain.centerTextBox(0, topBarPercentPlus, 100, 100, this.outputSpecification.pixelsH / 100 * (100 - 35), this.inputSpecification.mainValue || '', this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
         // Line between context and main section
         this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 });
         let outputResult = {

@@ -7,6 +7,7 @@ export interface GrafikkInputSpecification {
 	mainColorText: GrafikkColorRGB;
 	contextColorBackground: GrafikkColorRGB;
 	contextColorText: GrafikkColorRGB;
+	fontPath: string;
 }
 
 export interface GrafikkOutput {
@@ -32,12 +33,13 @@ export interface GrafikkOutputSpecification {
 export default class Grafikk {
 
 	public inputSpecification: GrafikkInputSpecification = {
-		mainValue: 'No text',
-		contextValue: 'No context',
+		mainValue: '',
+		contextValue: '',
 		mainColorBackground: { r: 0, g: 0, b: 0},
 		mainColorText: { r: 0, g: 0, b: 0},
 		contextColorBackground: { r: 50, g: 0, b: 0},
 		contextColorText: { r: 255, g: 190, b: 0},
+		fontPath: __dirname + "/../TTNorms-Medium.otf",
 	}
 
 	public outputBuffer: Buffer
@@ -182,7 +184,7 @@ export default class Grafikk {
 		}
 
 		// Draw context section
-		let fontContext = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
+		let fontContext = new GrafikkFont(this, this.inputSpecification.fontPath)
 		let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12
 		let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight
 		let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1)
@@ -199,7 +201,7 @@ export default class Grafikk {
 
 
 		// Draw main section
-		let fontMain = new GrafikkFont(this, __dirname + "/../TTNorms-Medium.otf")
+		let fontMain = new GrafikkFont(this, this.inputSpecification.fontPath)
 
 		fontMain.centerTextBox(
 			0, topBarPercentPlus, 100, 100,
