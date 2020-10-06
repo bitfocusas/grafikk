@@ -51,7 +51,7 @@ export default class GrafikkFont {
     private fontPath;
     private grafikk;
     private spaceFontSizeDividedBy;
-    constructor(grafikk: Grafikk, fontPath: string, fontFaceOptions?: GrafikkFontFace);
+    constructor(grafikk: Grafikk, fontPath: any, fontFaceOptions?: GrafikkFontFace);
     setFace(fontPath: string): void;
     charCodes(textString: string): number[];
     glyphsFromString(text: string): GrafikkFontGlyph[];

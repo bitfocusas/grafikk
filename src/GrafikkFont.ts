@@ -63,13 +63,13 @@ export default class GrafikkFont {
 	}
 
 	private memoryface: any
-	private fontPath: string
+	private fontPath: any
 	private grafikk: Grafikk
 	private spaceFontSizeDividedBy: number = 4
 
 	constructor(
 		grafikk: Grafikk, 
-		fontPath: string, 
+		fontPath: any, 
 		fontFaceOptions: GrafikkFontFace = {}
 	) {
 		this.face = {

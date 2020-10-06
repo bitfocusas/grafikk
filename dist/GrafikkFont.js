@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GrafikkFontAlign = void 0;
 const freetype = require('@julusian/freetype2');
 exports.GrafikkFontAlign = {
     TOP_LEFT: 1,
