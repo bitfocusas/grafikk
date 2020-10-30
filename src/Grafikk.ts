@@ -3,6 +3,7 @@ import GrafikkFont, { GrafikkFontAlign } from './GrafikkFont'
 export interface GrafikkInputSpecification {
 	mainValue: string;
 	contextValue: string;
+	inverted?: boolean;
 	mainColorBackground: GrafikkColorRGB;
 	mainColorText: GrafikkColorRGB;
 	contextColorBackground: GrafikkColorRGB;
@@ -35,10 +36,11 @@ export default class Grafikk {
 	public inputSpecification: GrafikkInputSpecification = {
 		mainValue: '',
 		contextValue: '',
-		mainColorBackground: { r: 0, g: 0, b: 0},
-		mainColorText: { r: 0, g: 0, b: 0},
-		contextColorBackground: { r: 50, g: 0, b: 0},
-		contextColorText: { r: 255, g: 190, b: 0},
+		inverted: false,
+		mainColorBackground: { r: 0, g: 0, b: 0 },
+		mainColorText: { r: 255, g: 255, b: 255 },
+		contextColorBackground: { r: 0, g: 0, b: 0 },
+		contextColorText: { r: 255, g: 255, b: 255 },
 		fontPath: __dirname + "/../TTNorms-Medium.otf",
 	}
 
@@ -81,8 +83,8 @@ export default class Grafikk {
 	}
 
 	// Clear the canvas
-	outputBufferClear() {
-		this.outputBuffer.fill(0);
+	outputBufferClear(color = 0) {
+		this.outputBuffer.fill(color);
 	}
 
 	drawMonoPixel(x: number, y: number, color: boolean) {
@@ -90,7 +92,7 @@ export default class Grafikk {
 		let index = Math.floor(bitPos / 8)
 		let was = this.outputBuffer.readUInt8(index)
 
-		let bit = 1 << (7-(bitPos % 8));
+		let bit = 1 << (7 - (bitPos % 8));
 		if (color) {
 			this.outputBuffer.writeUInt8(
 				was | bit,
@@ -110,6 +112,15 @@ export default class Grafikk {
 		this.outputBuffer.writeUInt8(color.g, pos + 1);
 		this.outputBuffer.writeUInt8(color.b, pos + 2);
 	}
+
+	drawFilledSquare(x: number, y: number, w: number, h: number, color: GrafikkColorRGB) {
+		for (let posx = x; posx <= x+w; posx++) {
+			for (let posy = y; posy <= y+h; posy++) {
+				this.drawRGBPixel(posx, posy, color);
+			}
+		}
+	}
+
 
 	drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB) {
 
@@ -149,7 +160,7 @@ export default class Grafikk {
 		for (var x = 0; x < this.outputSpecification.pixelsW; x += pixeljump) {
 			this.drawPixel(x, y, color);
 		}
-  }
+	}
 
 	drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB) {
 		for (var x = 0; x < this.outputSpecification.pixelsW; x++) {
@@ -161,7 +172,7 @@ export default class Grafikk {
 		for (var y = 0; y < this.outputSpecification.pixelsH; y++) {
 			this.drawPixel(x, y, color);
 		}
-  }
+	}
 
 	drawHorizontalDottedLinePercent(yPercent: number, pixeljump: number, color: boolean | GrafikkColorRGB) {
 		this.drawHorizontalDottedLine(Math.round(this.outputSpecification.pixelsH / 100 * yPercent), pixeljump, color)
@@ -176,44 +187,49 @@ export default class Grafikk {
 	}
 
 	generate(inputSpecification: GrafikkInputSpecification) {
-		this.outputBufferClear();
 
 		this.inputSpecification = {
 			...this.inputSpecification,
 			...inputSpecification
 		}
 
-		// Draw context section
+		this.outputBufferClear();
+
 		let fontContext = new GrafikkFont(this, this.inputSpecification.fontPath)
 		let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12
 		let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight
 		let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1)
 
-		fontContext.centerTextBox(
-			0, 0, 100, topBarPercent,
-			this.outputSpecification.pixelsH/100*35,
-			this.inputSpecification.contextValue || '',
-			this.inputSpecification.contextColorText,
-			this.inputSpecification.contextColorBackground,
-			GrafikkFontAlign.BOTTOM_CENTER
-		)
+		const contextPresent = this.outputSpecification.pixelsH > 24
 
+		if (contextPresent) {
+
+			// Line between context and main section
+			this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 })
+
+			fontContext.centerTextBox(
+				0, 0, 100, topBarPercent,
+				this.outputSpecification.pixelsH / 100 * 35,
+				this.inputSpecification.contextValue || '',
+				this.inputSpecification.contextColorText,
+				this.inputSpecification.contextColorBackground,
+				GrafikkFontAlign.BOTTOM_CENTER
+			)
+		}
 
 
 		// Draw main section
 		let fontMain = new GrafikkFont(this, this.inputSpecification.fontPath)
 
 		fontMain.centerTextBox(
-			0, topBarPercentPlus, 100, 100,
-			this.outputSpecification.pixelsH/100*(100-35),
+			0, contextPresent ? topBarPercentPlus : 0, 100, 100,
+			contextPresent ? this.outputSpecification.pixelsH / 100 * (100 - 35) : this.outputSpecification.pixelsH,
 			this.inputSpecification.mainValue || '',
 			this.inputSpecification.mainColorText,
 			this.inputSpecification.mainColorBackground,
-			GrafikkFontAlign.MIDDLE_CENTER
+			GrafikkFontAlign.MIDDLE_CENTER,
 		)
 
-		// Line between context and main section
-		this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 })
 
 
 		let outputResult: GrafikkOutput = {

@@ -274,7 +274,13 @@ export default class GrafikkFont {
 				}
 			}
 		}
-
+		else {
+			for (let y = fromY; y < toY; y++) {
+				for (let x = fromX; x < toX; x++) {
+					this.grafikk.drawMonoPixel(x,y,!background)
+				}
+			}
+		}
 		this.setSize(size)
 
 		let glyphs = this.glyphsFromString(text)

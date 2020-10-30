@@ -2,6 +2,7 @@
 export interface GrafikkInputSpecification {
     mainValue: string;
     contextValue: string;
+    inverted?: boolean;
     mainColorBackground: GrafikkColorRGB;
     mainColorText: GrafikkColorRGB;
     contextColorBackground: GrafikkColorRGB;
@@ -32,9 +33,10 @@ export default class Grafikk {
     outputCallback: (outputResult: GrafikkOutput) => void;
     constructor(outputSpecification: GrafikkOutputSpecification, outputCallback: (outputResult: GrafikkOutput) => void);
     outputBufferAllocate(): void;
-    outputBufferClear(): void;
+    outputBufferClear(color?: number): void;
     drawMonoPixel(x: number, y: number, color: boolean): void;
     drawRGBPixel(x: number, y: number, color: GrafikkColorRGB): void;
+    drawFilledSquare(x: number, y: number, w: number, h: number, color: GrafikkColorRGB): void;
     drawPixel(x: number, y: number, color: boolean | GrafikkColorRGB): void;
     drawHorizontalDottedLine(y: number, pixeljump: number, color: boolean | GrafikkColorRGB): void;
     drawHorizontalLine(y: number, color: boolean | GrafikkColorRGB): void;

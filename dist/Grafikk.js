@@ -6,10 +6,11 @@ class Grafikk {
         this.inputSpecification = {
             mainValue: '',
             contextValue: '',
+            inverted: false,
             mainColorBackground: { r: 0, g: 0, b: 0 },
-            mainColorText: { r: 0, g: 0, b: 0 },
-            contextColorBackground: { r: 50, g: 0, b: 0 },
-            contextColorText: { r: 255, g: 190, b: 0 },
+            mainColorText: { r: 255, g: 255, b: 255 },
+            contextColorBackground: { r: 0, g: 0, b: 0 },
+            contextColorText: { r: 255, g: 255, b: 255 },
             fontPath: __dirname + "/../TTNorms-Medium.otf",
         };
         this.outputSpecification = {
@@ -34,8 +35,8 @@ class Grafikk {
         }
     }
     // Clear the canvas
-    outputBufferClear() {
-        this.outputBuffer.fill(0);
+    outputBufferClear(color = 0) {
+        this.outputBuffer.fill(color);
     }
     drawMonoPixel(x, y, color) {
         let bitPos = x + (y * this.outputSpecification.pixelsW);
@@ -54,6 +55,13 @@ class Grafikk {
         this.outputBuffer.writeUInt8(color.r, pos + 0);
         this.outputBuffer.writeUInt8(color.g, pos + 1);
         this.outputBuffer.writeUInt8(color.b, pos + 2);
+    }
+    drawFilledSquare(x, y, w, h, color) {
+        for (let posx = x; posx <= x + w; posx++) {
+            for (let posy = y; posy <= y + h; posy++) {
+                this.drawRGBPixel(posx, posy, color);
+            }
+        }
     }
     drawPixel(x, y, color) {
         x = Math.round(x);
@@ -103,19 +111,21 @@ class Grafikk {
         this.drawVerticalLine(Math.round(this.outputSpecification.pixelsW / 100 * xPercent), color);
     }
     generate(inputSpecification) {
-        this.outputBufferClear();
         this.inputSpecification = Object.assign(Object.assign({}, this.inputSpecification), inputSpecification);
-        // Draw context section
+        this.outputBufferClear();
         let fontContext = new GrafikkFont_1.default(this, this.inputSpecification.fontPath);
         let topBarHeight = this.outputSpecification.pixelsH > 32 ? 15 : 12;
         let topBarPercent = 100 / this.outputSpecification.pixelsH * topBarHeight;
         let topBarPercentPlus = 100 / this.outputSpecification.pixelsH * (topBarHeight + 1);
-        fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue || '', this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
+        const contextPresent = this.outputSpecification.pixelsH > 24;
+        if (contextPresent) {
+            // Line between context and main section
+            this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 });
+            fontContext.centerTextBox(0, 0, 100, topBarPercent, this.outputSpecification.pixelsH / 100 * 35, this.inputSpecification.contextValue || '', this.inputSpecification.contextColorText, this.inputSpecification.contextColorBackground, GrafikkFont_1.GrafikkFontAlign.BOTTOM_CENTER);
+        }
         // Draw main section
         let fontMain = new GrafikkFont_1.default(this, this.inputSpecification.fontPath);
-        fontMain.centerTextBox(0, topBarPercentPlus, 100, 100, this.outputSpecification.pixelsH / 100 * (100 - 35), this.inputSpecification.mainValue || '', this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
-        // Line between context and main section
-        this.drawHorizontalDottedLinePercent(topBarPercent, 3, { r: 128, g: 128, b: 128 });
+        fontMain.centerTextBox(0, contextPresent ? topBarPercentPlus : 0, 100, 100, contextPresent ? this.outputSpecification.pixelsH / 100 * (100 - 35) : this.outputSpecification.pixelsH, this.inputSpecification.mainValue || '', this.inputSpecification.mainColorText, this.inputSpecification.mainColorBackground, GrafikkFont_1.GrafikkFontAlign.MIDDLE_CENTER);
         let outputResult = {
             error: null,
             buffer: this.outputBuffer

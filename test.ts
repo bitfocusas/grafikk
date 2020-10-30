@@ -27,6 +27,7 @@ interface testInterface {
 }
 
 const tests: testInterface[] = [
+	{ id: 'skaarhojSmall24', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 24, mono: true },
 	{ id: 'skaarhojSmall', physicalW: 13.4, physicalH: 7.6, pixelsW: 64, pixelsH: 32, mono: true },
 	{ id: 'skaarhojWide', physicalW: 26.8, physicalH: 7.6, pixelsW: 128, pixelsH: 32, mono: true },
 	{ id: 'streamdeckNormal', physicalW: 14, physicalH: 14, pixelsW: 72, pixelsH: 72, mono: false },
@@ -64,9 +65,11 @@ function update() {
 		if (outputSpecification.gfx) {
 			debug(`Going to generate ${outputSpecification.pixelsW}x${outputSpecification.pixelsH}`)
 			outputSpecification.gfx.generate({
+				fontPath: './TTNorms-Medium.otf',
 				mainValue: currentRenderMain,
 				contextValue: currentRenderContext,
-				mainColorBackground: { r: 0, g: 0,  b: 0 },
+				inverted: Math.random() > 0.5,
+				mainColorBackground: { r: 100, g: 100,  b: 100 },
 				mainColorText: randColor(),
 				contextColorBackground: { r: 40,   g: 30,  b: 20 },
 				contextColorText: { r: 255, g: 128,  b: 0 },

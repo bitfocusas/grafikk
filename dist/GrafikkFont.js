@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GrafikkFontAlign = void 0;
 const freetype = require('@julusian/freetype2');
 exports.GrafikkFontAlign = {
     TOP_LEFT: 1,
@@ -132,6 +131,13 @@ class GrafikkFont {
             for (let y = fromY; y <= toY; y++) {
                 for (let x = fromX; x <= toX; x++) {
                     this.grafikk.drawPixel(x, y, background);
+                }
+            }
+        }
+        else {
+            for (let y = fromY; y < toY; y++) {
+                for (let x = fromX; x < toX; x++) {
+                    this.grafikk.drawMonoPixel(x, y, !background);
                 }
             }
         }
