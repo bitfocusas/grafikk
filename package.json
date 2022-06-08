@@ -43,7 +43,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@julusian/freetype2": "^0.5.0-0",
+    "@julusian/freetype2": "^1.0.0",
     "@types/bson": "^4.0.0",
     "@types/lodash": "^4.14.144",
     "@types/network-interfaces": "^1.1.0",
